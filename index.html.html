@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FindaHome — Connect. Rent. Own.</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #1B4332;
+    --primary-light: #2D6A4F;
+    --primary-pale: #D8F3DC;
+    --accent: #F4A261;
+    --accent-dark: #E76F51;
+    --gold: #F4A261;
+    --white: #FFFFFF;
+    --off-white: #F8F6F1;
+    --gray-100: #F1EEE8;
+    --gray-200: #E2DDD4;
+    --gray-400: #9E998F;
+    --gray-600: #6B6560;
+    --gray-800: #2C2A26;
+    --danger: #C0392B;
+    --success: #27AE60;
+    --warning: #F39C12;
+    --shadow-sm: 0 2px 8px rgba(27,67,50,0.08);
+    --shadow-md: 0 8px 32px rgba(27,67,50,0.12);
+    --shadow-lg: 0 16px 48px rgba(27,67,50,0.16);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xl: 20px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'DM Sans', sans-serif; color: var(--gray-800); background: var(--white); }
+  h1,h2,h3,h4 { font-family: 'Playfair Display', serif; }
+  a { text-decoration: none; color: inherit; }
+  img { display: block; width: 100%; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    box-shadow: var(--shadow-sm);
+  }
+  .nav-inner {
+    max-width: 1200px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 24px; height: 68px;
+  }
+  .nav-logo { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+  .nav-logo-icon {
+    width: 38px; height: 38px; background: var(--primary);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  }
+  .nav-logo-icon svg { width: 20px; height: 20px; fill: white; }
+  .nav-logo-text { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--primary); }
+  .nav-logo-text span { color: var(--accent); }
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-links a {
+    padding: 8px 14px; border-radius: var(--radius-sm);
+    font-size: 0.875rem; font-weight: 500; color: var(--gray-600);
+    transition: all 0.2s; cursor: pointer;
+  }
+  .nav-links a:hover, .nav-links a.active { color: var(--primary); background: var(--primary-pale); }
+  .nav-cta {
+    background: var(--primary); color: white !important;
+    padding: 9px 20px !important; border-radius: 50px !important;
+  }
+  .nav-cta:hover { background: var(--primary-light) !important; }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--gray-800); border-radius: 2px; transition: 0.3s; }
+  .mobile-menu {
+    display: none; position: fixed; top: 68px; left: 0; right: 0; bottom: 0;
+    background: white; z-index: 999; padding: 24px; flex-direction: column; gap: 8px;
+  }
+  .mobile-menu.open { display: flex; }
+  .mobile-menu a {
+    padding: 14px 16px; border-radius: var(--radius-sm); font-size: 1rem;
+    font-weight: 500; color: var(--gray-600); border: 1px solid var(--gray-200);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--gray-800); color: var(--gray-200);
+    padding: 60px 24px 24px;
+  }
+  .footer-inner { max-width: 1200px; margin: 0 auto; }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 48px;
+  }
+  .footer-brand { color: white; }
+  .footer-brand .logo-text { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: white; margin-bottom: 12px; }
+  .footer-brand .logo-text span { color: var(--accent); }
+  .footer-brand p { font-size: 0.875rem; line-height: 1.7; color: var(--gray-400); max-width: 260px; }
+  .footer-socials { display: flex; gap: 10px; margin-top: 20px; }
+  .footer-socials a {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; color: var(--gray-400); transition: all 0.2s;
+  }
+  .footer-socials a:hover { background: var(--accent); color: white; }
+  .footer-col h4 { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; }
+  .footer-col a { display: block; font-size: 0.875rem; color: var(--gray-400); margin-bottom: 10px; transition: color 0.2s; cursor: pointer; }
+  .footer-col a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid rgba(255,255,255,0.08); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; color: var(--gray-400); }
+  .footer-bottom a { color: var(--gray-400); }
+
+  /* UTILS */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+  .section { padding: 80px 0; }
+  .section-sm { padding: 48px 0; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 12px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .badge-green { background: var(--primary-pale); color: var(--primary); }
+  .badge-orange { background: #FFF0E0; color: #C05621; }
+  .badge-blue { background: #EBF4FF; color: #2B6CB0; }
+  .badge-red { background: #FFF5F5; color: var(--danger); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 50px; font-size: 0.9rem; font-weight: 600;
+    cursor: pointer; transition: all 0.25s; border: none; font-family: 'DM Sans', sans-serif;
+  }
+  .btn-primary { background: var(--primary); color: white; }
+  .btn-primary:hover { background: var(--primary-light); transform: translateY(-1px); box-shadow: var(--shadow-md); }
+  .btn-accent { background: var(--accent); color: white; }
+  .btn-accent:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+  .btn-outline:hover { background: var(--primary); color: white; }
+  .btn-white { background: white; color: var(--primary); }
+  .btn-white:hover { background: var(--gray-100); }
+  .section-title { font-size: 2.2rem; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
+  .section-sub { font-size: 1rem; color: var(--gray-600); max-width: 500px; line-height: 1.7; }
+  .section-header { margin-bottom: 48px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  input, select, textarea {
+    width: 100%; padding: 12px 16px; border: 1px solid var(--gray-200);
+    border-radius: var(--radius-sm); font-size: 0.9rem; font-family: 'DM Sans', sans-serif;
+    color: var(--gray-800); background: white; transition: border-color 0.2s;
+    outline: none;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--primary); }
+  label { font-size: 0.85rem; font-weight: 500; color: var(--gray-600); display: block; margin-bottom: 6px; }
+  .form-group { margin-bottom: 20px; }
+  textarea { resize: vertical; min-height: 120px; }
+
+  /* PROPERTY CARD */
+  .prop-card {
+    background: white; border-radius: var(--radius-xl);
+    overflow: hidden; box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200); transition: all 0.3s;
+  }
+  .prop-card:hover { box-shadow: var(--shadow-md); transform: translateY(-4px); }
+  .prop-img {
+    position: relative; overflow: hidden;
+    height: 200px; background: var(--gray-100);
+  }
+  .prop-img img { height: 100%; object-fit: cover; transition: transform 0.4s; }
+  .prop-card:hover .prop-img img { transform: scale(1.05); }
+  .prop-tag {
+    position: absolute; top: 12px; left: 12px;
+    background: var(--primary); color: white;
+    padding: 4px 10px; border-radius: 50px; font-size: 0.75rem; font-weight: 600;
+  }
+  .prop-tag.sale { background: var(--accent-dark); }
+  .prop-fav {
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px; background: white; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--shadow-sm); cursor: pointer; font-size: 1rem;
+  }
+  .prop-body { padding: 16px 20px 20px; }
+  .prop-price { font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700; color: var(--primary); }
+  .prop-price span { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; font-weight: 400; color: var(--gray-400); }
+  .prop-title { font-size: 1rem; font-weight: 600; margin: 6px 0 4px; color: var(--gray-800); }
+  .prop-loc { font-size: 0.82rem; color: var(--gray-400); display: flex; align-items: center; gap: 4px; }
+  .prop-stats { display: flex; gap: 16px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--gray-200); }
+  .prop-stat { font-size: 0.8rem; color: var(--gray-600); display: flex; align-items: center; gap: 5px; }
+  .prop-stat svg { width: 14px; height: 14px; fill: var(--gray-400); }
+
+  /* =================== HOME PAGE =================== */
+  .hero {
+    padding-top: 68px; min-height: 100vh;
+    background: linear-gradient(135deg, #1B4332 0%, #2D6A4F 50%, #1B4332 100%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center;
+  }
+  .hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 80px 24px;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .hero-content { color: white; }
+  .hero-eyebrow {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(244,162,97,0.2); color: var(--accent);
+    padding: 6px 16px; border-radius: 50px; font-size: 0.8rem; font-weight: 600;
+    margin-bottom: 24px; border: 1px solid rgba(244,162,97,0.3);
+  }
+  .hero-title { font-size: 3.5rem; font-weight: 700; line-height: 1.15; margin-bottom: 20px; }
+  .hero-title span { color: var(--accent); }
+  .hero-desc { font-size: 1.05rem; line-height: 1.8; opacity: 0.85; margin-bottom: 36px; max-width: 460px; }
+  .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+  .hero-stats { display: flex; gap: 32px; margin-top: 48px; padding-top: 32px; border-top: 1px solid rgba(255,255,255,0.15); }
+  .hero-stat { text-align: center; }
+  .hero-stat strong { display: block; font-size: 1.8rem; font-family: 'Playfair Display', serif; font-weight: 700; }
+  .hero-stat span { font-size: 0.8rem; opacity: 0.7; }
+  .hero-cards { display: flex; flex-direction: column; gap: 16px; }
+  .hero-banner {
+    background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-xl); padding: 24px; backdrop-filter: blur(8px); cursor: pointer;
+    transition: all 0.3s; color: white;
+  }
+  .hero-banner:hover { background: rgba(255,255,255,0.18); transform: translateX(4px); }
+  .hero-banner-icon { font-size: 2rem; margin-bottom: 10px; }
+  .hero-banner h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 6px; }
+  .hero-banner p { font-size: 0.85rem; opacity: 0.75; }
+  .hero-banner .banner-count { font-size: 1.4rem; font-weight: 700; font-family: 'Playfair Display', serif; color: var(--accent); margin-top: 8px; }
+
+  .search-bar-wrap {
+    background: white; border-radius: var(--radius-xl); padding: 8px;
+    box-shadow: var(--shadow-lg); margin-top: -40px; position: relative; z-index: 10;
+    max-width: 900px; margin-left: auto; margin-right: auto;
+  }
+  .search-bar-inner { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .search-bar-inner select, .search-bar-inner input {
+    border: none; background: var(--gray-100); border-radius: var(--radius-sm);
+    flex: 1; min-width: 140px; padding: 12px 14px;
+  }
+  .search-bar-inner .btn { border-radius: var(--radius-sm); white-space: nowrap; }
+
+  .how-it-works { background: var(--off-white); }
+  .step-card {
+    text-align: center; padding: 32px 24px;
+    background: white; border-radius: var(--radius-xl); border: 1px solid var(--gray-200);
+  }
+  .step-num {
+    width: 52px; height: 52px; border-radius: 50%; background: var(--primary-pale);
+    color: var(--primary); font-size: 1.2rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;
+  }
+  .step-card h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .step-card p { font-size: 0.875rem; color: var(--gray-600); line-height: 1.6; }
+
+  .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .feat-card {
+    padding: 28px; border-radius: var(--radius-xl);
+    background: var(--gray-100); border: 1px solid var(--gray-200); transition: all 0.3s;
+  }
+  .feat-card:hover { background: var(--primary-pale); border-color: var(--primary-light); }
+  .feat-icon { font-size: 2rem; margin-bottom: 14px; }
+  .feat-card h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .feat-card p { font-size: 0.85rem; color: var(--gray-600); line-height: 1.6; }
+
+  /* =================== LISTINGS PAGE =================== */
+  .listings-hero {
+    padding-top: 68px; background: var(--primary); color: white;
+    padding-bottom: 0;
+  }
+  .listings-hero-inner { max-width: 1200px; margin: 0 auto; padding: 48px 24px 0; }
+  .listings-hero h1 { font-size: 2.2rem; margin-bottom: 8px; }
+  .listings-hero p { opacity: 0.8; margin-bottom: 32px; }
+  .listings-tabs {
+    display: flex; gap: 4px; background: rgba(0,0,0,0.2); border-radius: 10px;
+    padding: 4px; width: fit-content;
+  }
+  .listings-tab {
+    padding: 8px 24px; border-radius: 8px; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; color: rgba(255,255,255,0.7); transition: all 0.2s;
+  }
+  .listings-tab.active { background: white; color: var(--primary); }
+  .listings-body { padding: 48px 0; background: var(--off-white); }
+  .filter-bar {
+    background: white; border-radius: var(--radius-xl); padding: 20px 24px;
+    display: flex; gap: 12px; align-items: flex-end; flex-wrap: wrap;
+    box-shadow: var(--shadow-sm); margin-bottom: 32px; border: 1px solid var(--gray-200);
+  }
+  .filter-bar .form-group { margin-bottom: 0; flex: 1; min-width: 140px; }
+
+  /* =================== ROLES PAGES =================== */
+  .role-hero {
+    padding-top: 68px; background: var(--primary); color: white;
+    padding: 120px 24px 80px;
+  }
+  .role-hero-inner { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+  .role-hero h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.2; margin-bottom: 16px; }
+  .role-hero p { opacity: 0.85; line-height: 1.8; margin-bottom: 28px; }
+  .role-benefits { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 32px; }
+  .role-benefits li { display: flex; align-items: center; gap: 10px; font-size: 0.9rem; opacity: 0.9; }
+  .role-benefits li::before { content: '✓'; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: 700; flex-shrink: 0; }
+  .role-visual { display: flex; flex-direction: column; gap: 14px; }
+  .role-stat-card {
+    background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+    border-radius: var(--radius-xl); padding: 20px 24px; backdrop-filter: blur(8px);
+  }
+  .role-stat-card h3 { font-size: 2rem; font-family: 'Playfair Display', serif; font-weight: 700; color: var(--accent); }
+  .role-stat-card p { font-size: 0.85rem; opacity: 0.75; margin-top: 4px; }
+  .role-content { padding: 72px 0; background: var(--off-white); }
+  .role-card {
+    background: white; border-radius: var(--radius-xl); padding: 28px;
+    border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+  }
+  .role-card-icon { font-size: 1.8rem; margin-bottom: 14px; }
+  .role-card h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 8px; }
+  .role-card p { font-size: 0.85rem; color: var(--gray-600); line-height: 1.6; }
+
+  /* TENANT PAGE */
+  .notice-card {
+    border-radius: var(--radius-xl); padding: 24px 28px; border: 2px solid;
+    margin-bottom: 16px; position: relative; overflow: hidden;
+  }
+  .notice-card.danger { border-color: #FC8181; background: #FFF5F5; }
+  .notice-card.warning { border-color: #F6AD55; background: #FFFFF0; }
+  .notice-card.success { border-color: #68D391; background: #F0FFF4; }
+  .notice-card h4 { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 700; margin-bottom: 6px; }
+  .notice-card.danger h4 { color: var(--danger); }
+  .notice-card.warning h4 { color: #C05621; }
+  .notice-card.success h4 { color: #276749; }
+  .notice-card p { font-size: 0.85rem; color: var(--gray-600); line-height: 1.6; }
+  .notice-badge {
+    position: absolute; top: 16px; right: 16px; padding: 4px 12px;
+    border-radius: 50px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+  }
+  .notice-card.danger .notice-badge { background: var(--danger); color: white; }
+  .notice-card.warning .notice-badge { background: #F39C12; color: white; }
+  .notice-card.success .notice-badge { background: var(--success); color: white; }
+
+  .renewal-card {
+    background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-xl);
+    padding: 32px; box-shadow: var(--shadow-sm);
+  }
+  .renewal-steps { display: flex; flex-direction: column; gap: 16px; margin-top: 24px; }
+  .renewal-step { display: flex; gap: 16px; align-items: flex-start; }
+  .renewal-num {
+    width: 36px; height: 36px; border-radius: 50%; background: var(--primary-pale);
+    color: var(--primary); font-weight: 700; font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .renewal-step h5 { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .renewal-step p { font-size: 0.82rem; color: var(--gray-600); }
+
+  /* CONTACT PAGE */
+  .contact-hero { padding-top: 68px; background: var(--primary); color: white; padding-bottom: 60px; }
+  .contact-hero-inner { max-width: 800px; margin: 0 auto; padding: 60px 24px 0; text-align: center; }
+  .contact-hero h1 { font-size: 2.5rem; margin-bottom: 12px; }
+  .contact-hero p { opacity: 0.85; max-width: 460px; margin: 0 auto; line-height: 1.7; }
+  .contact-body { background: var(--off-white); padding: 60px 0; }
+  .contact-grid { display: grid; grid-template-columns: 1fr 1.6fr; gap: 40px; }
+  .contact-info-card {
+    background: var(--primary); color: white; border-radius: var(--radius-xl);
+    padding: 36px 28px;
+  }
+  .contact-info-card h3 { font-size: 1.3rem; margin-bottom: 24px; }
+  .contact-item { display: flex; gap: 14px; margin-bottom: 24px; align-items: flex-start; }
+  .contact-icon {
+    width: 40px; height: 40px; border-radius: 10px; background: rgba(255,255,255,0.1);
+    display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+  }
+  .contact-item h5 { font-family: 'DM Sans', sans-serif; font-size: 0.8rem; opacity: 0.7; font-weight: 500; margin-bottom: 2px; }
+  .contact-item p { font-size: 0.9rem; }
+  .contact-form-card { background: white; border-radius: var(--radius-xl); padding: 36px; box-shadow: var(--shadow-sm); }
+
+  /* PAYMENT */
+  .pay-card {
+    background: white; border: 1px solid var(--gray-200); border-radius: var(--radius-xl);
+    padding: 28px; display: flex; flex-direction: column; align-items: center;
+    text-align: center; box-shadow: var(--shadow-sm); transition: all 0.3s;
+  }
+  .pay-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .pay-icon { font-size: 2.5rem; margin-bottom: 14px; }
+  .pay-card h3 { font-family: 'DM Sans', sans-serif; font-size: 1rem; font-weight: 600; margin-bottom: 6px; }
+  .pay-card p { font-size: 0.82rem; color: var(--gray-600); line-height: 1.5; }
+  .pay-badge { margin-top: 12px; }
+
+  /* AGENT CONNECT */
+  .agent-card {
+    background: white; border-radius: var(--radius-xl); padding: 24px;
+    border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm); display: flex; flex-direction: column;
+    gap: 14px; transition: all 0.3s;
+  }
+  .agent-card:hover { box-shadow: var(--shadow-md); transform: translateY(-3px); }
+  .agent-card-top { display: flex; gap: 14px; align-items: center; }
+  .agent-avatar {
+    width: 56px; height: 56px; border-radius: 50%; object-fit: cover;
+    background: var(--gray-200); flex-shrink: 0; overflow: hidden;
+  }
+  .agent-avatar img { width: 100%; height: 100%; object-fit: cover; }
+  .agent-info h4 { font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; }
+  .agent-info p { font-size: 0.8rem; color: var(--gray-400); margin-top: 2px; }
+  .agent-rating { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; color: var(--gray-600); margin-top: 4px; }
+  .agent-rating span { color: #F6AD55; }
+  .agent-stats { display: flex; gap: 16px; }
+  .agent-stat { text-align: center; flex: 1; background: var(--gray-100); border-radius: var(--radius-sm); padding: 10px; }
+  .agent-stat strong { font-size: 1.1rem; color: var(--primary); display: block; }
+  .agent-stat small { font-size: 0.72rem; color: var(--gray-600); }
+
+  /* REPORT ISSUE */
+  .issue-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 28px; }
+  .issue-type {
+    border: 2px solid var(--gray-200); border-radius: var(--radius); padding: 16px;
+    text-align: center; cursor: pointer; transition: all 0.2s;
+  }
+  .issue-type:hover { border-color: var(--primary); background: var(--primary-pale); }
+  .issue-type.selected { border-color: var(--primary); background: var(--primary-pale); }
+  .issue-type .icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .issue-type h4 { font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; }
+
+  @media (max-width: 900px) {
+    .hero-inner, .role-hero-inner, .contact-grid { grid-template-columns: 1fr; }
+    .hero-cards { display: none; }
+    .grid-3, .grid-4, .feature-grid { grid-template-columns: 1fr 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .nav-links { display: none; }
+    .hamburger { display: flex; }
+    .hero-title { font-size: 2.4rem; }
+    .role-hero { padding: 100px 24px 60px; }
+  }
+  @media (max-width: 600px) {
+    .grid-2, .grid-3, .grid-4, .feature-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 2rem; }
+    .section-title { font-size: 1.7rem; }
+    .hero-stats { gap: 20px; }
+    .hero-stats strong { font-size: 1.4rem; }
+    .issue-type-grid { grid-template-columns: 1fr 1fr; }
+    .contact-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="main-nav">
+  <div class="nav-inner">
+    <div class="nav-logo" onclick="showPage('home')">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+      </div>
+      <div class="nav-logo-text">Find<span>aHome</span></div>
+    </div>
+    <div class="nav-links">
+      <a onclick="showPage('home')" class="active" id="nav-home">Home</a>
+      <a onclick="showPage('listings')" id="nav-listings">Listings</a>
+      <a onclick="showPage('landlord')" id="nav-landlord">Landlords</a>
+      <a onclick="showPage('agent')" id="nav-agent">Agents</a>
+      <a onclick="showPage('tenant')" id="nav-tenant">Tenants</a>
+      <a onclick="showPage('contact')" id="nav-contact" class="nav-cta">Contact Us</a>
+    </div>
+    <div class="hamburger" onclick="toggleMobile()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+<div class="mobile-menu" id="mobile-menu">
+  <a onclick="showPage('home');toggleMobile()">Home</a>
+  <a onclick="showPage('listings');toggleMobile()"> Listings</a>
+  <a onclick="showPage('landlord');toggleMobile()"> For Landlords</a>
+  <a onclick="showPage('agent');toggleMobile()"> For Agents</a>
+  <a onclick="showPage('tenant');toggleMobile()"> For Tenants</a>
+  <a onclick="showPage('contact');toggleMobile()"> Contact Us</a>
+</div>
+
+<!-- ============================= HOME PAGE ============================= -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div class="hero-content">
+        <div class="hero-eyebrow">
+          <span></span> Ghana's #1 Property Platform
+        </div>
+        <h1 class="hero-title">Find Your Perfect <span>Home</span> in Ghana</h1>
+        <p class="hero-desc">Connecting landlords, tenants, and agents in one seamless platform. Browse thousands of verified properties across Accra, Kumasi, and beyond.</p>
+        <div class="hero-btns">
+          <button class="btn btn-accent" onclick="showPage('listings')">Browse Properties ›</button>
+          <button class="btn btn-white btn-outline" onclick="showPage('landlord')" style="border-color:rgba(255,255,255,0.5);color:white;">List Your Property</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><strong>4,200+</strong><span>Properties</span></div>
+          <div class="hero-stat"><strong>1,800+</strong><span>Happy Tenants</span></div>
+          <div class="hero-stat"><strong>320+</strong><span>Verified Agents</span></div>
+        </div>
+      </div>
+      <div class="hero-cards">
+        <div class="hero-banner" onclick="showPage('listings')">
+          <div class="hero-banner-icon"></div>
+          <h3>Houses For Rent</h3>
+          <p>Comfortable homes across premium locations</p>
+          <div class="banner-count">2,400+ Available</div>
+        </div>
+        <div class="hero-banner" onclick="showPage('listings')">
+          <div class="hero-banner-icon"></div>
+          <h3>Properties For Sale</h3>
+          <p>Invest in your forever home today</p>
+          <div class="banner-count">1,800+ Listings</div>
+        </div>
+        <div class="hero-banner" onclick="showPage('listings')">
+          <div class="hero-banner-icon"></div>
+          <h3>Rental Apartments</h3>
+          <p>Modern apartments in prime locations</p>
+          <div class="banner-count">640+ Units</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Search Bar -->
+  <div class="container">
+    <div class="search-bar-wrap">
+      <div class="search-bar-inner">
+        <select><option>All Types</option><option>House</option><option>Apartment</option><option>Studio</option></select>
+        <input type="text" placeholder="Search city, area, or address...">
+        <select><option>Any Price</option><option>Under GH₵ 2,000/mo</option><option>GH₵ 2,000–5,000/mo</option><option>Over GH₵ 5,000/mo</option></select>
+        <select><option>For Rent</option><option>For Sale</option></select>
+        <button class="btn btn-primary" onclick="showPage('listings')"> Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Featured Listings -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;">
+        <div>
+          <p class="badge badge-green" style="margin-bottom:10px;">Featured Listings</p>
+          <h2 class="section-title">Popular Properties</h2>
+          <p class="section-sub">Hand-picked homes across Ghana's most sought-after neighbourhoods.</p>
+        </div>
+        <button class="btn btn-outline" onclick="showPage('listings')">View All Listings</button>
+      </div>
+      <div class="grid-3" id="home-featured-grid"></div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="section how-it-works">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <p class="badge badge-orange" style="margin:0 auto 10px;">Simple Process</p>
+        <h2 class="section-title">How FindaHome Works</h2>
+        <p class="section-sub" style="margin:0 auto;">Whether you're a landlord, agent, or tenant — getting started takes minutes.</p>
+      </div>
+      <div class="grid-4">
+        <div class="step-card"><div class="step-num">1</div><h3>Create Account</h3><p>Sign up as a tenant, landlord, or agent and complete your profile.</p></div>
+        <div class="step-card"><div class="step-num">2</div><h3>Search or List</h3><p>Browse thousands of properties or publish your listing in minutes.</p></div>
+        <div class="step-card"><div class="step-num">3</div><h3>Connect</h3><p>Message agents and landlords directly, schedule viewings instantly.</p></div>
+        <div class="step-card"><div class="step-num">4</div><h3>Move In!</h3><p>Agree terms, sign digitally, and pay securely through our platform.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Who It's For -->
+  <section class="section">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <h2 class="section-title">Built for Everyone</h2>
+        <p class="section-sub" style="margin:0 auto;">One platform connecting the entire rental and property ecosystem in Ghana.</p>
+      </div>
+      <div class="grid-3">
+        <div class="feat-card" onclick="showPage('landlord')" style="cursor:pointer;">
+          <div class="feat-icon"></div>
+          <h3>Landlords</h3>
+          <p>List properties effortlessly, manage tenants, collect rent, and maximise occupancy with zero hassle.</p>
+          <p style="margin-top:14px;font-size:0.82rem;font-weight:600;color:var(--primary);">Get Started →</p>
+        </div>
+        <div class="feat-card" onclick="showPage('agent')" style="cursor:pointer;">
+          <div class="feat-icon"></div>
+          <h3>Agents</h3>
+          <p>Grow your business, manage listings, earn commissions, and connect with verified buyers and renters.</p>
+          <p style="margin-top:14px;font-size:0.82rem;font-weight:600;color:var(--primary);">Join as Agent →</p>
+        </div>
+        <div class="feat-card" onclick="showPage('tenant')" style="cursor:pointer;">
+          <div class="feat-icon"></div>
+          <h3>Tenants</h3>
+          <p>Find your perfect home, manage lease renewals, receive deadline notices, and pay rent digitally.</p>
+          <p style="margin-top:14px;font-size:0.82rem;font-weight:600;color:var(--primary);">Find a Home →</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Payment Methods -->
+  <section class="section" style="background:var(--off-white);">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <p class="badge badge-blue" style="margin:0 auto 10px;">Secure Payments</p>
+        <h2 class="section-title">Flexible Payment Options</h2>
+        <p class="section-sub" style="margin:0 auto;">Pay your rent and property fees using your preferred method — safely and instantly.</p>
+      </div>
+      <div class="grid-4">
+        <div class="pay-card">
+          <div class="pay-icon"></div>
+          <h3>MTN Mobile Money</h3>
+          <p>Instant transfers via MoMo</p>
+          <span class="badge badge-green pay-badge">Instant</span>
+        </div>
+        <div class="pay-card">
+          <div class="pay-icon"></div>
+          <h3>Vodafone Cash</h3>
+          <p>Secure mobile payments</p>
+          <span class="badge badge-green pay-badge">Instant</span>
+        </div>
+        <div class="pay-card">
+          <div class="pay-icon"></div>
+          <h3>Visa / Mastercard</h3>
+          <p>International card payments</p>
+          <span class="badge badge-blue pay-badge">Secure</span>
+        </div>
+        <div class="pay-card">
+          <div class="pay-icon"></div>
+          <h3>Bank Transfer</h3>
+          <p>Direct bank-to-bank transfer</p>
+          <span class="badge badge-orange pay-badge">1–2 Days</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Banner -->
+  <section style="background:var(--primary);padding:72px 24px;text-align:center;">
+    <div style="max-width:600px;margin:0 auto;color:white;">
+      <h2 style="font-size:2.2rem;margin-bottom:16px;">Ready to Find Your Home?</h2>
+      <p style="opacity:0.85;margin-bottom:32px;line-height:1.7;">Join over 50,000 Ghanaians who trust FindaHome for all their property needs.</p>
+      <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn btn-accent" onclick="showPage('listings')">Browse Listings</button>
+        <button class="btn btn-white" onclick="showPage('contact')">Talk to an Agent</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="logo-text">Find<span>aHome</span></div>
+          <p>Ghana's leading property platform connecting landlords, agents, and tenants across the country.</p>
+          <div class="footer-socials">
+            <a href="#">f</a><a href="#">t</a><a href="#">in</a><a href="#">ig</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h4>Quick Links</h4>
+          <a onclick="showPage('home')">Home</a>
+          <a onclick="showPage('listings')">Listings</a>
+          <a onclick="showPage('listings')">For Rent</a>
+          <a onclick="showPage('listings')">For Sale</a>
+        </div>
+        <div class="footer-col">
+          <h4>For You</h4>
+          <a onclick="showPage('landlord')">Landlords</a>
+          <a onclick="showPage('agent')">Agents</a>
+          <a onclick="showPage('tenant')">Tenants</a>
+          <a onclick="showPage('contact')">Report Issue</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="#">Accra, Ghana</a>
+          <a href="#"> +233 59 628 7237</a>
+          <a href="#">hello@findahome.gh</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 FindaHome. All rights reserved.</span>
+        <div style="display:flex;gap:24px;"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Cookies</a></div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================= LISTINGS PAGE ============================= -->
+<div class="page" id="page-listings">
+  <div class="listings-hero">
+    <div class="listings-hero-inner">
+      <p class="badge badge-orange" style="margin-bottom:12px;">Browse Properties</p>
+      <h1>Find Your Perfect Property</h1>
+      <p>Over 4,200 verified listings across Ghana</p>
+      <div class="listings-tabs">
+        <div class="listings-tab active" onclick="filterType('all',this)">All</div>
+        <div class="listings-tab" onclick="filterType('rent',this)">For Rent</div>
+        <div class="listings-tab" onclick="filterType('sale',this)">For Sale</div>
+        <div class="listings-tab" onclick="filterType('apartment',this)">Apartments</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="listings-body">
+    <div class="container">
+      <div class="filter-bar">
+        <div class="form-group"><label>Location</label><select><option>All Areas</option><option>East Legon</option><option>Labone</option><option>Osu</option><option>Tema</option><option>Kumasi</option><option>Takoradi</option></select></div>
+        <div class="form-group"><label>Property Type</label><select><option>All Types</option><option>House</option><option>Apartment</option><option>Studio</option><option>Townhouse</option></select></div>
+        <div class="form-group"><label>Bedrooms</label><select><option>Any</option><option>1 Bed</option><option>2 Beds</option><option>3 Beds</option><option>4+ Beds</option></select></div>
+        <div class="form-group"><label>Max Price</label><select><option>Any</option><option>GH₵ 2,000/mo</option><option>GH₵ 5,000/mo</option><option>GH₵ 10,000/mo</option></select></div>
+        <button class="btn btn-primary" style="align-self:flex-end;">Apply Filters</button>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+        <p style="color:var(--gray-600);font-size:0.9rem;">Showing <strong id="result-count">12</strong> properties</p>
+        <select style="width:auto;padding:8px 14px;"><option>Sort: Newest First</option><option>Price: Low to High</option><option>Price: High to Low</option></select>
+      </div>
+
+      <div class="grid-3" id="listings-grid"></div>
+
+      <div style="text-align:center;margin-top:48px;">
+        <button class="btn btn-outline">Load More Properties</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo-text">Find<span>aHome</span></div><p>Ghana's leading property platform.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('listings')">Listings</a></div>
+        <div class="footer-col"><h4>For You</h4><a onclick="showPage('landlord')">Landlords</a><a onclick="showPage('tenant')">Tenants</a></div>
+        <div class="footer-col"><h4>Contact</h4><a> Accra, Ghana</a><a>+233 59 628 7237</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 FindaHome</span></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================= LANDLORD PAGE ============================= -->
+<div class="page" id="page-landlord">
+  <div class="role-hero">
+    <div class="role-hero-inner container">
+      <div>
+        <span class="badge badge-orange" style="margin-bottom:16px;">For Landlords</span>
+        <h1>List & Manage Your Properties with Ease</h1>
+        <p>Join thousands of landlords earning more with less stress. From listing to lease signing — we handle it all.</p>
+        <ul class="role-benefits">
+          <li>Free property listing setup</li>
+          <li>Verified tenant screening</li>
+          <li>Digital lease agreements</li>
+          <li>Rent collection & tracking</li>
+          <li>Maintenance request management</li>
+        </ul>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <button class="btn btn-accent">List Your Property</button>
+          <button class="btn btn-outline btn-white" style="border-color:rgba(255,255,255,0.5);color:white;">Learn More</button>
+        </div>
+      </div>
+      <div class="role-visual">
+        <div class="role-stat-card"><h3>GH₵ 12M+</h3><p>Rent collected for landlords this year</p></div>
+        <div class="role-stat-card"><h3>98%</h3><p>Occupancy rate for listed properties</p></div>
+        <div class="role-stat-card"><h3>3,200+</h3><p>Landlords trust our platform</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="role-content">
+    <div class="container">
+      <div class="section-header" style="text-align:center;margin-bottom:48px;">
+        <h2 class="section-title">Everything a Landlord Needs</h2>
+        <p class="section-sub" style="margin:0 auto;">Tools designed to help you earn more and stress less.</p>
+      </div>
+      <div class="grid-3" style="margin-bottom:60px;">
+        <div class="role-card"><div class="role-card-icon"></div><h3>Smart Listings</h3><p>Create stunning property listings with photos, virtual tours, and detailed descriptions in minutes.</p></div>
+        <div class="role-card"><div class="role-card-icon"></div><h3>Tenant Screening</h3><p>Access verified tenant profiles, credit scores, and references before signing any agreement.</p></div>
+        <div class="role-card"><div class="role-card-icon"></div><h3>Digital Contracts</h3><p>Create legally-binding lease agreements online. Sign, store, and manage all documents digitally.</p></div>
+        <div class="role-card"><div class="role-card-icon"></div><h3>Rent Collection</h3><p>Automated rent reminders and collections via Mobile Money, Visa, or bank transfer.</p></div>
+        <div class="role-card"><div class="role-card-icon"></div><h3>Maintenance Tracking</h3><p>Tenants submit maintenance requests online. Track status, assign contractors, close tickets.</p></div>
+        <div class="role-card"><div class="role-card-icon"></div><h3>Performance Dashboard</h3><p>Real-time analytics on occupancy, income, expenses, and property performance.</p></div>
+      </div>
+
+      <!-- List Property Form -->
+      <div style="background:white;border-radius:var(--radius-xl);padding:40px;border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);max-width:700px;margin:0 auto;">
+        <h3 style="font-size:1.4rem;margin-bottom:6px;">List Your Property</h3>
+        <p style="color:var(--gray-600);margin-bottom:28px;font-size:0.9rem;">Fill in the details below and we'll get your property live within 24 hours.</p>
+        <div class="grid-2">
+          <div class="form-group"><label>Property Title</label><input type="text" placeholder="e.g. 3-Bed House in East Legon"></div>
+          <div class="form-group"><label>Property Type</label><select><option>House</option><option>Apartment</option><option>Studio</option><option>Townhouse</option></select></div>
+          <div class="form-group"><label>Location / Area</label><input type="text" placeholder="e.g. Labone, Accra"></div>
+          <div class="form-group"><label>Monthly Rent (GH₵)</label><input type="number" placeholder="e.g. 3500"></div>
+          <div class="form-group"><label>Bedrooms</label><select><option>1</option><option>2</option><option>3</option><option>4+</option></select></div>
+          <div class="form-group"><label>Listing Type</label><select><option>For Rent</option><option>For Sale</option></select></div>
+        </div>
+        <div class="form-group"><label>Description</label><textarea placeholder="Describe your property — features, amenities, nearby facilities..."></textarea></div>
+        <div class="form-group"><label>Upload Photos</label><input type="file" multiple accept="image/*" style="padding:10px;background:var(--gray-100);cursor:pointer;"></div>
+        <div class="form-group"><label>Your Contact Number</label><input type="tel" placeholder="+233 ..."></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;">Submit Property Listing ›</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo-text">Find<span>aHome</span></div><p>Ghana's leading property platform.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('listings')">Listings</a></div>
+        <div class="footer-col"><h4>For You</h4><a onclick="showPage('agent')">Agents</a><a onclick="showPage('tenant')">Tenants</a></div>
+        <div class="footer-col"><h4>Contact</h4><a>Accra, Ghana</a><a>+233 59 628 7237</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 FindaHome</span></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================= AGENT PAGE ============================= -->
+<div class="page" id="page-agent">
+  <div class="role-hero">
+    <div class="role-hero-inner container">
+      <div>
+        <span class="badge badge-blue" style="margin-bottom:16px;background:#1E3A5F;color:#90CDF4;">For Agents</span>
+        <h1>Grow Your Real Estate Business</h1>
+        <p>Access qualified leads, manage your portfolio, and earn more commissions with Ghana's most trusted property platform.</p>
+        <ul class="role-benefits">
+          <li>Verified agent badge & profile</li>
+          <li>Unlimited property listings</li>
+          <li>Priority placement in search</li>
+          <li>Automated lead notifications</li>
+          <li>Commission tracking & payouts</li>
+        </ul>
+        <button class="btn btn-accent">Join as an Agent</button>
+      </div>
+      <div class="role-visual">
+        <div class="role-stat-card"><h3>320+</h3><p>Verified agents on the platform</p></div>
+        <div class="role-stat-card"><h3>GH₵ 2.4M</h3><p>Commissions earned this year</p></div>
+        <div class="role-stat-card"><h3>48 hrs</h3><p>Average time to first lead</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="role-content">
+    <div class="container">
+      <div class="section-header" style="text-align:center;">
+        <h2 class="section-title">Meet Our Top Agents</h2>
+        <p class="section-sub" style="margin:0 auto;">Connect with experienced, verified real estate agents across Ghana.</p>
+      </div>
+      <div class="grid-3" style="margin-bottom:60px;" id="agents-grid"></div>
+
+      <!-- Connect with Agent Form -->
+      <div style="background:white;border-radius:var(--radius-xl);padding:40px;border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);max-width:640px;margin:0 auto;">
+        <h3 style="font-size:1.4rem;margin-bottom:6px;">Connect with an Agent</h3>
+        <p style="color:var(--gray-600);margin-bottom:28px;font-size:0.9rem;">Tell us what you're looking for and a verified agent will reach out within 2 hours.</p>
+        <div class="form-group"><label>Your Full Name</label><input type="text" placeholder="e.g. Kwame Mensah"></div>
+        <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+233 ..."></div>
+        <div class="form-group"><label>Email Address</label><input type="email" placeholder="you@email.com"></div>
+        <div class="form-group"><label>What are you looking for?</label>
+          <select><option>Renting a property</option><option>Buying a property</option><option>Selling a property</option><option>Property management</option></select></div>
+        <div class="form-group"><label>Preferred Location</label><input type="text" placeholder="e.g. East Legon, Accra"></div>
+        <div class="form-group"><label>Budget (GH₵)</label><input type="text" placeholder="e.g. 5,000/month"></div>
+        <div class="form-group"><label>Additional Notes</label><textarea placeholder="Any specific requirements..."></textarea></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;">Request Agent Connection ›</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo-text">Find<span>aHome</span></div><p>Ghana's leading property platform.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('listings')">Listings</a></div>
+        <div class="footer-col"><h4>For You</h4><a onclick="showPage('landlord')">Landlords</a><a onclick="showPage('tenant')">Tenants</a></div>
+        <div class="footer-col"><h4>Contact</h4><a> Accra, Ghana</a><a> +233 59 628 7237</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 FindaHome</span></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================= TENANT PAGE ============================= -->
+<div class="page" id="page-tenant">
+  <div class="role-hero">
+    <div class="role-hero-inner container">
+      <div>
+        <span class="badge badge-green" style="background:rgba(212,243,220,0.2);color:var(--primary-pale);border:1px solid rgba(212,243,220,0.3);margin-bottom:16px;">For Tenants</span>
+        <h1>Your Home. Your Rights. Our Support.</h1>
+        <p>Manage your tenancy from start to finish — find a home, get deadline alerts, renew your lease, and pay rent all in one place.</p>
+        <ul class="role-benefits">
+          <li>Deadline & renewal notices</li>
+          <li>Secure digital payments</li>
+          <li>Direct landlord messaging</li>
+          <li>Maintenance request portal</li>
+          <li>Tenancy history & documents</li>
+        </ul>
+        <button class="btn btn-accent" onclick="showPage('listings')">Find a Home Now</button>
+      </div>
+      <div class="role-visual">
+        <div class="role-stat-card"><h3>1,800+</h3><p>Tenants placed this year</p></div>
+        <div class="role-stat-card"><h3>4.9 ★</h3><p>Average tenant satisfaction rating</p></div>
+        <div class="role-stat-card"><h3>24 hrs</h3><p>Average response to maintenance issues</p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="role-content">
+    <div class="container">
+      <div class="grid-2" style="align-items:start;gap:40px;">
+
+        <!-- Left Column: Notices -->
+        <div>
+          <h2 class="section-title" style="font-size:1.6rem;margin-bottom:8px;">Lease Deadline Notices</h2>
+          <p style="color:var(--gray-600);margin-bottom:28px;font-size:0.9rem;">Stay on top of important dates — never miss a deadline again.</p>
+
+          <div class="notice-card danger">
+            <span class="notice-badge">Urgent</span>
+            <h4>Lease Expiry in 7 Days</h4>
+            <p>Your lease at <strong>14 Palm Court, East Legon</strong> expires on <strong>May 9, 2025</strong>. Contact your landlord immediately to discuss renewal or extension.</p>
+          </div>
+
+          <div class="notice-card warning">
+            <span class="notice-badge">Action Needed</span>
+            <h4>Renewal Offer Received</h4>
+            <p>Your landlord has sent a lease renewal offer with updated terms. You have until <strong>May 15, 2025</strong> to accept, negotiate, or decline.</p>
+          </div>
+
+          <div class="notice-card warning">
+            <span class="notice-badge">Reminder</span>
+            <h4> Rent Due in 5 Days</h4>
+            <p>Monthly rent of <strong>GH₵ 3,200</strong> for <strong>Flat 4B, Labone Heights</strong> is due on <strong>May 7, 2025</strong>. Pay via MoMo or bank transfer.</p>
+          </div>
+
+          <div class="notice-card success">
+            <span class="notice-badge">Confirmed</span>
+            <h4>✅Lease Renewal Confirmed</h4>
+            <p>Your 12-month renewal for <strong>8 Ocean View Drive, Tema</strong> has been signed and confirmed. New lease period: June 2025 – May 2026.</p>
+          </div>
+        </div>
+
+        <!-- Right Column: Renewal Process -->
+        <div>
+          <div class="renewal-card">
+            <h3 style="font-size:1.3rem;margin-bottom:6px;">Lease Renewal Process</h3>
+            <p style="color:var(--gray-600);font-size:0.875rem;">Follow these simple steps to renew your tenancy smoothly.</p>
+            <div class="renewal-steps">
+              <div class="renewal-step"><div class="renewal-num">1</div><div><h5>Review Your Current Lease</h5><p>Check your lease end date, current terms, and any clauses about renewal notice periods.</p></div></div>
+              <div class="renewal-step"><div class="renewal-num">2</div><div><h5>Notify Your Landlord Early</h5><p>Submit a renewal intention at least 30 days before lease expiry to avoid any gaps.</p></div></div>
+              <div class="renewal-step"><div class="renewal-num">3</div><div><h5>Negotiate New Terms</h5><p>Discuss rent adjustments, duration, and any property improvements you need.</p></div></div>
+              <div class="renewal-step"><div class="renewal-num">4</div><div><h5>Sign New Agreement</h5><p>Review and sign the updated lease document digitally through our secure platform.</p></div></div>
+              <div class="renewal-step"><div class="renewal-num">5</div><div><h5>Confirm & Pay Advance</h5><p>Pay any advance rent or security deposit required for the new lease period.</p></div></div>
+            </div>
+            <button class="btn btn-primary" style="margin-top:24px;width:100%;justify-content:center;">Start Renewal Process ›</button>
+          </div>
+
+          <!-- Report Issue -->
+          <div style="margin-top:28px;background:white;border-radius:var(--radius-xl);padding:28px;border:1px solid var(--gray-200);box-shadow:var(--shadow-sm);">
+            <h3 style="font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;margin-bottom:6px;">🔧 Report a Maintenance Issue</h3>
+            <p style="font-size:0.82rem;color:var(--gray-600);margin-bottom:18px;">Got a broken pipe or faulty electricity? Report it and track the fix.</p>
+            <div class="issue-type-grid">
+              <div class="issue-type selected" onclick="selectIssue(this)"><div class="icon">💧</div><h4>Plumbing</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">⚡</div><h4>Electrical</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">🔒</div><h4>Security</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">🌡️</div><h4>HVAC</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">🏚️</div><h4>Structural</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">🗑️</div><h4>Other</h4></div>
+            </div>
+            <div class="form-group"><label>Describe the Issue</label><textarea placeholder="Please describe what's wrong in detail..." style="min-height:80px;"></textarea></div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;">Submit Report</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo-text">Find<span>aHome</span></div><p>Ghana's leading property platform.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('listings')">Listings</a></div>
+        <div class="footer-col"><h4>For You</h4><a onclick="showPage('landlord')">Landlords</a><a onclick="showPage('agent')">Agents</a></div>
+        <div class="footer-col"><h4>Contact</h4><a> Accra, Ghana</a><a> +233 59 628 7237</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 FindaHome</span></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================= CONTACT PAGE ============================= -->
+<div class="page" id="page-contact">
+  <div class="contact-hero">
+    <div class="contact-hero-inner">
+      <p class="badge badge-orange" style="margin:0 auto 14px;display:table;">Get In Touch</p>
+      <h1>We're Here to Help</h1>
+      <p>Have a question, want to report an issue, or need help finding the right property? Our team is ready.</p>
+    </div>
+  </div>
+
+  <div class="contact-body">
+    <div class="container">
+      <div class="contact-grid">
+        <div>
+          <div class="contact-info-card">
+            <h3>Contact Information</h3>
+            <div class="contact-item">
+              <div class="contact-icon"></div>
+              <div><h5>Office Address</h5><p>12 Liberation Road, Accra, Ghana</p></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"></div>
+              <div><h5>Phone</h5><p>+233 59 628 7237</p></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"></div>
+              <div><h5>Email</h5><p>hello@findahome.gh</p></div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"></div>
+              <div><h5>Working Hours</h5><p>Mon–Fri: 8am – 6pm<br>Sat: 9am – 2pm</p></div>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;background:white;border-radius:var(--radius-xl);padding:28px;border:1px solid var(--gray-200);">
+            <h3 style="font-family:'DM Sans',sans-serif;font-size:1rem;font-weight:600;margin-bottom:16px;">🔴 Report an Issue</h3>
+            <div class="issue-type-grid">
+              <div class="issue-type selected" onclick="selectIssue(this)"><div class="icon">🏠</div><h4>Property</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">💰</div><h4>Payment</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">👤</div><h4>Agent</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">🔒</div><h4>Security</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">📋</div><h4>Lease</h4></div>
+              <div class="issue-type" onclick="selectIssue(this)"><div class="icon">❓</div><h4>Other</h4></div>
+            </div>
+            <div class="form-group" style="margin-top:14px;"><label>Issue Description</label><textarea placeholder="Tell us what's wrong..." style="min-height:80px;"></textarea></div>
+            <button class="btn btn-accent" style="width:100%;justify-content:center;">Submit Report</button>
+          </div>
+        </div>
+
+        <div class="contact-form-card">
+          <h3 style="font-size:1.4rem;margin-bottom:6px;">Send Us a Message</h3>
+          <p style="color:var(--gray-600);margin-bottom:28px;font-size:0.9rem;">We'll get back to you within 2 business hours.</p>
+          <div class="grid-2">
+            <div class="form-group"><label>First Name</label><input type="text" placeholder="Edward"></div>
+            <div class="form-group"><label>Last Name</label><input type="text" placeholder="Adom"></div>
+          </div>
+          <div class="form-group"><label>Email Address</label><input type="email" placeholder="adomedward57@gmail.com"></div>
+          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+233 ..."></div>
+          <div class="form-group"><label>I am a...</label>
+            <select><option>Tenant</option><option>Landlord</option><option>Agent</option><option>Buyer</option><option>Other</option></select></div>
+          <div class="form-group"><label>Subject</label><input type="text" placeholder="e.g. Looking for a 3-bedroom in Accra"></div>
+          <div class="form-group"><label>Message</label><textarea placeholder="Tell us how we can help..." style="min-height:140px;"></textarea></div>
+
+          <div style="margin-bottom:24px;">
+            <p style="font-size:0.85rem;font-weight:600;color:var(--gray-600);margin-bottom:12px;">Preferred Payment Method</p>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;">
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;font-weight:400;"><input type="checkbox" style="width:auto;"> MTN MoMo</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;font-weight:400;"><input type="checkbox" style="width:auto;"> Vodafone Cash</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;font-weight:400;"><input type="checkbox" style="width:auto;"> Visa/Mastercard</label>
+              <label style="display:flex;align-items:center;gap:6px;font-size:0.85rem;cursor:pointer;font-weight:400;"><input type="checkbox" style="width:auto;"> Bank Transfer</label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px 24px;font-size:1rem;">Send Message ›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand"><div class="logo-text">Find<span>aHome</span></div><p>Ghana's leading property platform.</p></div>
+        <div class="footer-col"><h4>Quick Links</h4><a onclick="showPage('home')">Home</a><a onclick="showPage('listings')">Listings</a></div>
+        <div class="footer-col"><h4>For You</h4><a onclick="showPage('landlord')">Landlords</a><a onclick="showPage('tenant')">Tenants</a></div>
+        <div class="footer-col"><h4>Contact</h4><a> Accra, Ghana</a><a> +233 59 628 7237</a></div>
+      </div>
+      <div class="footer-bottom"><span>© 2026 FindaHome</span></div>
+    </div>
+  </footer>
+</div>
+
+<script>
+// ============================================================
+// DATA
+// ============================================================
+const properties = [
+  { id:1, title:'Elegant 4-Bed Villa', loc:'East Legon, Accra', price:'GH₵ 8,500', type:'rent', beds:4, baths:3, sqft:'380', tag:'Rent', img:'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80', fav:false },
+  { id:2, title:'Modern 3-Bed Apartment', loc:'Labone, Accra', price:'GH₵ 5,200', type:'rent', beds:3, baths:2, sqft:'210', tag:'Rent', img:'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&q=80', fav:true },
+  { id:3, title:'Luxury 5-Bed Mansion', loc:'Airport Hills, Accra', price:'GH₵ 2.1M', type:'sale', beds:5, baths:4, sqft:'520', tag:'Sale', img:'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=600&q=80', fav:false },
+  { id:4, title:'Cozy 2-Bed Apartment', loc:'Osu, Accra', price:'GH₵ 2,800', type:'apartment', beds:2, baths:1, sqft:'95', tag:'Rent', img:'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=600&q=80', fav:false },
+  { id:5, title:'Executive Studio', loc:'Cantonments, Accra', price:'GH₵ 1,900', type:'apartment', beds:1, baths:1, sqft:'55', tag:'Rent', img:'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=600&q=80', fav:false },
+  { id:6, title:'Family 4-Bed Townhouse', loc:'Tema, Greater Accra', price:'GH₵ 4,400', type:'rent', beds:4, baths:3, sqft:'290', tag:'Rent', img:'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=600&q=80', fav:false },
+  { id:7, title:'3-Bed Home for Sale', loc:'Kumasi, Ashanti', price:'GH₵ 780K', type:'sale', beds:3, baths:2, sqft:'175', tag:'Sale', img:'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=600&q=80', fav:false },
+  { id:8, title:'Garden Apartment', loc:'Ridge, Accra', price:'GH₵ 3,600', type:'apartment', beds:2, baths:2, sqft:'130', tag:'Rent', img:'https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=600&q=80', fav:false },
+  { id:9, title:'Seafront Villa', loc:'Takoradi, Western', price:'GH₵ 1.5M', type:'sale', beds:5, baths:4, sqft:'450', tag:'Sale', img:'https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=600&q=80', fav:false },
+  { id:10, title:'Minimalist Studio Flat', loc:'Airport City, Accra', price:'GH₵ 2,100', type:'apartment', beds:1, baths:1, sqft:'48', tag:'Rent', img:'https://images.unsplash.com/photo-1536376072261-38c75010e6c9?w=600&q=80', fav:false },
+  { id:11, title:'5-Bed Colonial Home', loc:'Roman Ridge, Accra', price:'GH₵ 12,000', type:'rent', beds:5, baths:5, sqft:'640', tag:'Rent', img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=600&q=80', fav:false },
+  { id:12, title:'Brand New 3-Bed House', loc:'Kasoa, Central', price:'GH₵ 550K', type:'sale', beds:3, baths:2, sqft:'165', tag:'Sale', img:'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=600&q=80', fav:false },
+];
+
+const agents = [
+  { name:'Agnes Brown', title:'Senior Property Agent', location:'Accra', rating:4.9, reviews:128, listings:47, sales:23, img:null },
+  { name:'Kofi Smith', title:'Residential Specialist', location:'Kumasi', rating:4.8, reviews:94, listings:38, sales:19, img:null },
+  { name:'Efua Mensah', title:'Commercial & Luxury Agent', location:'Accra', rating:4.9, reviews:211, listings:62, sales:41, img:null },
+  { name:'Nana Boateng', title:'First-Time Buyer Expert', location:'Tema', rating:4.7, reviews:76, listings:29, sales:15, img:null },
+  { name:'Akosua Darko', title:'Rental & Lettings Agent', location:'Takoradi', rating:4.8, reviews:103, listings:55, sales:8, img:null },
+  { name:'Emmanuel Asante', title:'Investment Property Expert', location:'Accra', rating:5.0, reviews:58, listings:33, sales:29, img:null },
+];
+
+
+// ============================================================
+// RENDER FUNCTIONS
+// ============================================================
+function propCard(p) {
+  return `<div class="prop-card">
+    <div class="prop-img">
+      <img src="${p.img}" alt="${p.title}" loading="lazy">
+      <span class="prop-tag ${p.type==='sale'?'sale':''}">${p.tag}</span>
+      <div class="prop-fav" onclick="toggleFav(${p.id},this)">${p.fav?'❤️':'🤍'}</div>
+    </div>
+    <div class="prop-body">
+      <div class="prop-price">${p.price}<span>${p.type==='rent'?'/month':''}</span></div>
+      <div class="prop-title">${p.title}</div>
+      <div class="prop-loc">📍 ${p.loc}</div>
+      <div class="prop-stats">
+        <div class="prop-stat"><svg viewBox="0 0 24 24"><path d="M7 13c1.66 0 3-1.34 3-3S8.66 7 7 7s-3 1.34-3 3 1.34 3 3 3zm12-6h-8v7H3V5H1v15h2v-3h18v3h2v-9c0-2.21-1.79-4-4-4z"/></svg>${p.beds} Beds</div>
+        <div class="prop-stat"><svg viewBox="0 0 24 24"><path d="M22 9V7h-2V5c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v14h2v-3h16v3h2v-9h-2zm-4 4H4V5h14v8z"/></svg>${p.baths} Baths</div>
+        <div class="prop-stat"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z" opacity=".3"/><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z"/></svg>${p.sqft}m²</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function agentCard(a) {
+  return `<div class="agent-card">
+    <div class="agent-card-top">
+      <div class="agent-avatar"><img src="${a.img}" alt="${a.name}" loading="lazy" onerror="this.style.display='none'"></div>
+      <div class="agent-info">
+        <h4>${a.name}</h4>
+        <p>${a.title}</p>
+        <div class="agent-rating"><span>★</span> ${a.rating} <span style="color:var(--gray-400)">(${a.reviews} reviews)</span></div>
+        <p style="font-size:0.75rem;color:var(--gray-400);margin-top:2px;">📍 ${a.location}</p>
+      </div>
+    </div>
+    <div class="agent-stats">
+      <div class="agent-stat"><strong>${a.listings}</strong><small>Listings</small></div>
+      <div class="agent-stat"><strong>${a.sales}</strong><small>Sales</small></div>
+      <div class="agent-stat"><strong>✓</strong><small>Verified</small></div>
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;border-radius:8px;padding:10px 16px;font-size:0.85rem;" onclick="showPage('contact')">Connect with ${a.name.split(' ')[0]}</button>
+  </div>`;
+}
+
+function renderHome() {
+  const grid = document.getElementById('home-featured-grid');
+  if(grid) grid.innerHTML = properties.slice(0,6).map(propCard).join('');
+}
+
+function renderListings(type='all') {
+  const filtered = type==='all' ? properties : properties.filter(p=>p.type===type);
+  const grid = document.getElementById('listings-grid');
+  const count = document.getElementById('result-count');
+  if(grid) grid.innerHTML = filtered.map(propCard).join('');
+  if(count) count.textContent = filtered.length;
+}
+
+function renderAgents() {
+  const grid = document.getElementById('agents-grid');
+  if(grid) grid.innerHTML = agents.map(agentCard).join('');
+}
+
+// ============================================================
+// NAV & ROUTING
+// ============================================================
+let currentPage = 'home';
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links a').forEach(a=>a.classList.remove('active'));
+  const page = document.getElementById('page-'+id);
+  const navLink = document.getElementById('nav-'+id);
+  if(page) page.classList.add('active');
+  if(navLink) navLink.classList.add('active');
+  currentPage = id;
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='home') renderHome();
+  if(id==='listings') renderListings();
+  if(id==='agent') renderAgents();
+}
+
+function filterType(type, el) {
+  document.querySelectorAll('.listings-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  renderListings(type);
+}
+
+function toggleFav(id, el) {
+  const p = properties.find(p=>p.id===id);
+  if(p) { p.fav = !p.fav; el.textContent = p.fav?'❤️':'🤍'; }
+}
+
+function toggleMobile() {
+  document.getElementById('mobile-menu').classList.toggle('open');
+}
+
+function selectIssue(el) {
+  el.closest('.issue-type-grid').querySelectorAll('.issue-type').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// Init
+renderHome();
+</script>
+</body>
+</html>
